@@ -3,9 +3,6 @@
 # DO NOT add the local environment files, like OS temp files or IDE files.
 # For local environment files use global ignore.
 
-# Composer
-vendor/
-composer.lock
-
-# PHPUnit
-phpunit.xml
+# Node
+/node_modules
+/package-lock.json

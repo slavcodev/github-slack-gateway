@@ -16,13 +16,6 @@ class GithubEvent {
   }
 
   /**
-     * @returns {string}
-     */
-  toString () {
-    return JSON.stringify(this, null, " ");
-  }
-
-  /**
      * @param headers
      * @param payload
      * @returns {GithubEvent}
@@ -101,11 +94,10 @@ class IssueCommentEvent extends GithubEvent {
  */
 class Github {
   /**
-     * @param logger
-     */
-  constructor (logger) {
+   * Constructor.
+   */
+  constructor () {
     this.handlers = [];
-    this.logger = logger;
   }
 
   /**
@@ -117,7 +109,7 @@ class Github {
   onProjectCardMoved (from, to, callback) {
     this.handlers.push(event => {
       if (event instanceof ProjectCardEvent && event.isMoved(from, to)) {
-        callback(event);
+        return callback(event);
       }
     });
 
@@ -138,7 +130,7 @@ class Github {
         event.isCreated() &&
         (matches = event.isMatched(regexp))
       ) {
-        callback(matches, event);
+        return callback(matches, event);
       }
     });
 
@@ -151,11 +143,14 @@ class Github {
      */
   handle (headers, payload) {
     const event = GithubEvent.create(headers, payload);
-
-    this.logger.log(event);
+    let message;
 
     for (let handler of this.handlers) {
-      handler(event);
+      message = handler(event);
+
+      if (message) {
+        return message;
+      }
     }
   }
 }

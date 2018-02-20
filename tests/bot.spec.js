@@ -1,40 +1,8 @@
 "use strict";
 
 const Assert = require("chai").assert;
-const Github = require("./../src/github");
-const Slack = require("./../src/slack");
 const Bot = require("./../src/bot");
 const Faker = require("./faker");
-
-class NoopClient {
-  constructor () {
-    this.events = [];
-  }
-  send (message) {
-    this.events.push(message);
-  }
-  flush () {
-    const messages = this.events;
-    this.events = [];
-
-    return messages;
-  }
-}
-
-class EventLogger {
-  constructor () {
-    this.events = [];
-  }
-  log (event) {
-    this.events.push(event);
-  }
-  flush () {
-    const events = this.events;
-    this.events = [];
-
-    return events;
-  }
-}
 
 Assert.isJsonSerializable = val => {
   Assert.strictEqual(val + "", val.toString());
@@ -67,97 +35,49 @@ Assert.isMessage = (val, team, channel, message) => {
 };
 
 describe("Bot", () => {
-  const recorder = new EventLogger();
-  const client = new NoopClient();
-  const github = new Github(recorder);
-  const slack = new Slack(client, "Badass");
-  const bot = new Bot(github, slack);
+  let messages = [];
+
+  const bot = new Bot(
+    Faker.botConfig("Badass"),
+    (message) => {
+      messages.push(message);
+      // console.log(message);
+    }
+  );
 
   it("init default properties", () => {
-    Assert.strictEqual(bot.github, github);
-    Assert.strictEqual(bot.slack, slack);
+    Assert.isObject(bot.github);
+    Assert.isObject(bot.slack);
     Assert.isObject(bot.teams);
-  });
-
-  it("adds the team from default channel", () => {
-    bot.addTeam("1", "foo");
-
-    Assert.isObject(bot.teams);
-    Assert.hasAllKeys(bot.teams, ["foo"]);
-    Assert.property(bot.teams, "foo", {
-      teamId: "1",
-      teamName: "foo",
-      channel: "#general"
-    });
-  });
-
-  it("adds the team", () => {
-    bot.addTeam("1", "foo", "#foo");
-    bot.addTeam("2", "bar", "#bar");
-
-    Assert.isObject(bot.teams);
-    Assert.hasAllKeys(bot.teams, ["foo", "bar"]);
-    Assert.property(bot.teams, "foo", {
-      teamId: "1",
-      teamName: "foo",
-      channel: "#foo"
-    });
-    Assert.property(bot.teams, "bar", {
-      teamId: "2",
-      teamName: "bar",
-      channel: "#bar"
-    });
-  });
-
-  it("subscribes on card moving", () => {
-    bot.askReviewOnCardMoved(2038543, 2038567, "foo");
-
-    Assert.lengthOf(github.handlers, 1);
-  });
-
-  it("subscribes on new comment", () => {
-    bot.askReviewByComment();
-
-    Assert.lengthOf(github.handlers, 2);
+    Assert.hasAllKeys(bot.teams, ["foo", "bar", "baz"]);
+    Assert.property(bot.teams, "foo", {teamId: "1", teamName: "foo", channel: "#foo"});
+    Assert.property(bot.teams, "bar", {teamId: "2", teamName: "bar", channel: "#bar"});
+    Assert.property(bot.teams, "baz", {teamId: "3", teamName: "baz", channel: "#general"});
+    Assert.lengthOf(bot.github.handlers, 2);
   });
 
   it("handles review request on card moved", () => {
+    messages = [];
     bot.handle(Faker.projectCardMoved());
 
-    const events = recorder.flush();
-    Assert.isArray(events);
-    Assert.lengthOf(events, 1);
-    Assert.isJsonSerializable(events[0]);
-
-    const messages = client.flush();
     Assert.isArray(messages);
     Assert.lengthOf(messages, 1);
     Assert.isMessage(messages[0], "foo", "#foo", "please review");
   });
 
   it("handles review request on comment", () => {
+    messages = [];
     bot.handle(Faker.reviewCommentCreated());
 
-    const events = recorder.flush();
-    Assert.isArray(events);
-    Assert.lengthOf(events, 1);
-    Assert.isJsonSerializable(events[0]);
-
-    const messages = client.flush();
     Assert.isArray(messages);
     Assert.lengthOf(messages, 1);
     Assert.isMessage(messages[0], "foo", "#foo", "please review");
   });
 
   it("handles team re-review request on comment", () => {
+    messages = [];
     bot.handle(Faker.teamReviewCommentCreated());
 
-    const events = recorder.flush();
-    Assert.isArray(events);
-    Assert.lengthOf(events, 1);
-    Assert.isJsonSerializable(events[0]);
-
-    const messages = client.flush();
     Assert.isArray(messages);
     Assert.lengthOf(messages, 1);
     Assert.isMessage(messages[0], "bar", "#bar", "please re-review");

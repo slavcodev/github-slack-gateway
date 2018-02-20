@@ -1,6 +1,19 @@
 "use strict";
 
 class Faker {
+  static botConfig(appName) {
+    return {
+      appName: appName,
+      appIcon: null,
+      teams: [
+        {id: '1', name: 'foo', channel: '#foo'},
+        {id: '2', name: 'bar', channel: '#bar'},
+        {id: '3', name: 'baz'},
+      ],
+      progressColumn: 2038543,
+      reviewColumn: 2038567
+    };
+  }
   static projectCardMoved() {
     return {
       headers: { "X-GitHub-Event": "project_card" },

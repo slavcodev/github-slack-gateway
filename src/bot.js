@@ -1,14 +1,21 @@
 "use strict";
 
+const Github = require("./github");
+const Slack = require("./slack");
+
 class Bot {
   /**
-     * @param {Github} github
-     * @param {Slack} slack
+   * @param {object} options
+   * @param {function} callback
      */
-  constructor (github, slack) {
-    this.github = github;
-    this.slack = slack;
+  constructor (options, callback) {
+    this.github = new Github();
+    this.slack = new Slack(options.appName, options.appIcon, callback);
     this.teams = {};
+
+    this.addTeams(options.teams)
+      .askReviewOnCardMoved(options.progressColumn, options.reviewColumn)
+      .askReviewByComment();
   }
 
   /**
@@ -28,12 +35,26 @@ class Bot {
   }
 
   /**
+   * @param {Array} teams
+   * @returns {Bot}
+   */
+  addTeams (teams) {
+    for (let team of teams) {
+      this.addTeam(team.id, team.name, team.channel);
+    }
+
+    return this;
+  }
+
+  /**
      * @param inProgressColumnId
      * @param inReviewColumnId
      * @param teamName
      * @returns {Bot}
      */
   askReviewOnCardMoved (inProgressColumnId, inReviewColumnId, teamName) {
+    teamName = teamName || Object.keys(this.teams)[0];
+
     this.github.onProjectCardMoved(
       inProgressColumnId,
       inReviewColumnId,
@@ -43,21 +64,19 @@ class Bot {
         )[1];
         const issueRepository = event.payload.repository.full_name;
 
-        this.slack.send(
-          this.buildReviewRequest(
-            "Please review",
-            {
-              name: event.payload.sender.login,
-              link: event.payload.sender.html_url,
-              icon: event.payload.sender.avatar_url
-            },
-            {
-              id: issueId,
-              repository: issueRepository,
-              link: `https://github.com/${issueRepository}/issues/${issueId}`
-            },
-            teamName
-          )
+        return this.buildReviewRequest(
+          "Please review",
+          {
+            name: event.payload.sender.login,
+            link: event.payload.sender.html_url,
+            icon: event.payload.sender.avatar_url
+          },
+          {
+            id: issueId,
+            repository: issueRepository,
+            link: `https://github.com/${issueRepository}/issues/${issueId}`
+          },
+          teamName
         );
       }
     );
@@ -82,21 +101,19 @@ class Bot {
       const teamName = matches[1] || teamNames[0];
       const reviewRequest = matches[2] ? "Please re-review" : "Please review";
 
-      this.slack.send(
-        this.buildReviewRequest(
-          reviewRequest,
-          {
-            name: event.payload.sender.login,
-            link: event.payload.sender.html_url,
-            icon: event.payload.sender.avatar_url
-          },
-          {
-            id: issueId,
-            repository: issueRepository,
-            link: `https://github.com/${issueRepository}/issues/${issueId}`
-          },
-          teamName
-        )
+      return this.buildReviewRequest(
+        reviewRequest,
+        {
+          name: event.payload.sender.login,
+          link: event.payload.sender.html_url,
+          icon: event.payload.sender.avatar_url
+        },
+        {
+          id: issueId,
+          repository: issueRepository,
+          link: `https://github.com/${issueRepository}/issues/${issueId}`
+        },
+        teamName
       );
     });
 
@@ -107,7 +124,7 @@ class Bot {
      * @param request
      */
   handle (request) {
-    this.github.handle(request.headers, request.payload);
+    this.slack.send(this.github.handle(request.headers, request.payload));
   }
 
   /**

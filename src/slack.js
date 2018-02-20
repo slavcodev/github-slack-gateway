@@ -5,12 +5,12 @@
  */
 class Slack {
   /**
-     * @param httpClient
-     * @param appName
-     * @param appIcon
+     * @param {string?} appName
+     * @param {string?} appIcon
+     * @param {function?} callback
      */
-  constructor (httpClient, appName, appIcon) {
-    this.httpClient = httpClient;
+  constructor (appName, appIcon, callback) {
+    this.callback = callback;
     this.appName = appName;
     this.appIcon = appIcon || ":stuck_out_tongue_winking_eye:";
     this.defaultAttachmentColor = "good";
@@ -20,7 +20,7 @@ class Slack {
      * @param message
      */
   send (message) {
-    this.httpClient.send(message);
+    this.callback(message);
   }
 
   /**

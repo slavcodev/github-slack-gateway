@@ -14,7 +14,9 @@ _TBD_
 
 ## Testing
 
-_TBD_
+```shell
+npm test
+```
 
 ## Contributing
 

@@ -4,6 +4,7 @@ const Assert = require("chai").assert;
 const Github = require("./../src/github");
 const Slack = require("./../src/slack");
 const Bot = require("./../src/bot");
+const Faker = require("./faker");
 
 class NoopClient {
   constructor () {
@@ -121,30 +122,7 @@ describe("Bot", () => {
   });
 
   it("handles review request on card moved", () => {
-    bot.handle({
-      headers: { "X-GitHub-Event": "project_card" },
-      payload: {
-        action: "moved",
-        changes: {
-          column_id: {
-            from: 2038543
-          }
-        },
-        project_card: {
-          column_id: 2038567,
-          content_url: "https://api.github.com/repos/foo/bar/issues/150"
-        },
-        repository: {
-          full_name: "foo/bar"
-        },
-        sender: {
-          login: "slavcodev",
-          url: "https://api.github.com/users/slavcodev",
-          html_url: "https://github.com/slavcodev",
-          avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
-        }
-      }
-    });
+    bot.handle(Faker.projectCardMoved());
 
     const events = recorder.flush();
     Assert.isArray(events);
@@ -158,27 +136,7 @@ describe("Bot", () => {
   });
 
   it("handles review request on comment", () => {
-    bot.handle({
-      headers: { "X-GitHub-Event": "issue_comment" },
-      payload: {
-        action: "created",
-        issue: {
-          url: "https://api.github.com/repos/foo/bar/issues/150"
-        },
-        comment: {
-          body: "please review"
-        },
-        repository: {
-          full_name: "foo/bar"
-        },
-        sender: {
-          login: "slavcodev",
-          url: "https://api.github.com/users/slavcodev",
-          html_url: "https://github.com/slavcodev",
-          avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
-        }
-      }
-    });
+    bot.handle(Faker.reviewCommentCreated());
 
     const events = recorder.flush();
     Assert.isArray(events);
@@ -192,27 +150,7 @@ describe("Bot", () => {
   });
 
   it("handles team re-review request on comment", () => {
-    bot.handle({
-      headers: { "X-GitHub-Event": "issue_comment" },
-      payload: {
-        action: "created",
-        issue: {
-          url: "https://api.github.com/repos/foo/bar/issues/150"
-        },
-        comment: {
-          body: "bar please re-review"
-        },
-        repository: {
-          full_name: "foo/bar"
-        },
-        sender: {
-          login: "slavcodev",
-          url: "https://api.github.com/users/slavcodev",
-          html_url: "https://github.com/slavcodev",
-          avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
-        }
-      }
-    });
+    bot.handle(Faker.teamReviewCommentCreated());
 
     const events = recorder.flush();
     Assert.isArray(events);

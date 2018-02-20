@@ -35,15 +35,7 @@ Assert.isMessage = (val, team, channel, message) => {
 };
 
 describe("Bot", () => {
-  let messages = [];
-
-  const bot = new Bot(
-    Faker.botConfig("Badass"),
-    (message) => {
-      messages.push(message);
-      // console.log(message);
-    }
-  );
+  const bot = new Bot(Faker.botConfig("Badass"), () => {});
 
   it("init default properties", () => {
     Assert.isObject(bot.github);
@@ -57,30 +49,30 @@ describe("Bot", () => {
   });
 
   it("handles review request on card moved", () => {
-    messages = [];
-    bot.handle(Faker.projectCardMoved());
-
-    Assert.isArray(messages);
-    Assert.lengthOf(messages, 1);
-    Assert.isMessage(messages[0], "foo", "#foo", "please review");
+    bot
+      .handle(Faker.projectCardMoved())
+      .then((message) => {
+        Assert.isMessage(message, "foo", "#foo", "please review");
+      })
+    ;
   });
 
   it("handles review request on comment", () => {
-    messages = [];
-    bot.handle(Faker.reviewCommentCreated());
-
-    Assert.isArray(messages);
-    Assert.lengthOf(messages, 1);
-    Assert.isMessage(messages[0], "foo", "#foo", "please review");
+    bot
+      .handle(Faker.reviewCommentCreated())
+      .then((message) => {
+        Assert.isMessage(message, "foo", "#foo", "please review");
+      })
+    ;
   });
 
   it("handles team re-review request on comment", () => {
-    messages = [];
-    bot.handle(Faker.teamReviewCommentCreated());
-
-    Assert.isArray(messages);
-    Assert.lengthOf(messages, 1);
-    Assert.isMessage(messages[0], "bar", "#bar", "please re-review");
+    bot
+      .handle(Faker.teamReviewCommentCreated())
+      .then((message) => {
+        Assert.isMessage(message, "bar", "#bar", "please re-review");
+      })
+    ;
   });
 
   it("fails on handle unknown event", () => {
@@ -91,5 +83,14 @@ describe("Bot", () => {
       Error,
       "Unsupported event: unknown_event"
     );
+  });
+
+  it("fails on callback errors", () => {
+    const bot = new Bot(Faker.botConfig("Badass"), () => {throw new Error("Callback error")});
+    bot
+      .handle(Faker.projectCardMoved())
+      .catch((e) => {
+        Assert.instanceOf(e, Error);
+      });
   });
 });

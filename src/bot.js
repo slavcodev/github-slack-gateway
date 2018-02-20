@@ -10,7 +10,7 @@ class Bot {
      */
   constructor (options, callback) {
     this.github = new Github();
-    this.slack = new Slack(options.appName, options.appIcon, callback);
+    this.slack = new Slack(callback, options.appName, options.appIcon);
     this.teams = {};
 
     this.addTeams(options.teams)
@@ -121,10 +121,13 @@ class Bot {
   }
 
   /**
-     * @param request
-     */
+   * @param request
+   * @returns {Promise<any>}
+   */
   handle (request) {
-    this.slack.send(this.github.handle(request.headers, request.payload));
+    return this.slack.send(
+      this.github.handle(request.headers, request.payload)
+    );
   }
 
   /**

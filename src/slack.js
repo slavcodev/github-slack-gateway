@@ -5,11 +5,11 @@
  */
 class Slack {
   /**
+     * @param {function} callback
      * @param {string?} appName
      * @param {string?} appIcon
-     * @param {function?} callback
      */
-  constructor (appName, appIcon, callback) {
+  constructor (callback, appName, appIcon) {
     this.callback = callback;
     this.appName = appName;
     this.appIcon = appIcon || ":stuck_out_tongue_winking_eye:";
@@ -17,10 +17,18 @@ class Slack {
   }
 
   /**
-     * @param message
-     */
+   * @param message
+   * @returns {Promise<any>}
+   */
   send (message) {
-    this.callback(message);
+    return new Promise((resolve, reject) => {
+      try {
+        this.callback(message);
+        resolve(message);
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
   /**

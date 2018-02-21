@@ -1,0 +1,20 @@
+# Node
+/coverage
+/node_modules
+/package-lock.json
+/npm-debug.log
+
+# Github and CI
+/PULL_REQUEST_TEMPLATE.md
+/ISSUE_TEMPLATE.md
+/CONTRIBUTING.md
+/CODE_OF_CONDUCT.md
+/.gitattributes
+/.travis.yml
+
+# Dev
+/tests
+/.idea
+/.eslintrc
+/.editorconfig
+/local

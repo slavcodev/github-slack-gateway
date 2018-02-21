@@ -11,31 +11,29 @@ class Slack {
    * @param {function?} callback
    */
   constructor (options, callback) {
+    this.requestOptions = {
+      hostname: options.hostname || "hooks.slack.com",
+      path: options.hookPath,
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    };
+
     if (!callback) {
       callback = message => {
-        const request = {
-          hostname: options.hostname || "hooks.slack.com",
-          path: options.hookPath,
-          method: "POST",
-          headers: { "Content-Type": "application/json" }
-        };
+        return new Promise((resolve, reject) => {
+          const request = https.request(this.requestOptions, response => {
+            let body = "";
 
-        return new Promise((resolve, reject) =>
-          https
-            .request(request)
-            .on("response", response => {
-              let body = "";
+            response.on("data", chunk => (body += chunk));
+            response.on("end", () => resolve(body));
+          });
 
-              response
-                .on("data", chunk => (body += chunk))
-                .on("end", () => resolve(body));
-            })
-            .on("error", error =>
-              reject(new Error(`Problem: ${error.message}`))
-            )
-            .write(JSON.stringify(message))
-            .end()
-        );
+          request.on("error", error =>
+            reject(new Error(`Problem: ${error.message}`))
+          );
+          request.write(JSON.stringify(message));
+          request.end();
+        });
       };
     }
 

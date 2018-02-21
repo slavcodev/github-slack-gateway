@@ -2,16 +2,19 @@
 
 const Bot = require('./src/bot');
 
-exports.handler = (event, context, callback) => {
+exports.handler = (event, context, callback, httpClient) => {
   const respond = (code, body) => callback(null, {
     statusCode: code,
     body: body,
     headers: {'Content-Type': 'application/json'},
   });
+  const encode = (message) => {
+    return typeof message === 'string'
+      ? message
+      : JSON.stringify(message);
+  };
 
-  const hook = () => {};
-
-  const bot = new Bot(JSON.parse(process.env.BOT_CONFIG), hook);
+  const bot = new Bot(JSON.parse(process.env.BOT_CONFIG), httpClient);
 
   switch (event.httpMethod) {
     case 'GET':
@@ -21,7 +24,8 @@ exports.handler = (event, context, callback) => {
     case 'POST':
       bot
         .handle({headers: event.headers, payload: JSON.parse(event.body)})
-        .then(message => respond(200, JSON.stringify(message)))
+        .then(message => encode(message))
+        .then(message => respond(200, message))
         .catch(error => respond(400, error.message))
       ;
 

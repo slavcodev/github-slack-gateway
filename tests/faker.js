@@ -3,6 +3,7 @@
 class Faker {
   static botConfig(appName) {
     return {
+      hookPath: "demo",
       appName: appName,
       appIcon: null,
       teams: [

@@ -1,18 +1,47 @@
 "use strict";
 
+const https = require("https");
+
 /**
  * Slack.
  */
 class Slack {
   /**
-     * @param {function} callback
-     * @param {string?} appName
-     * @param {string?} appIcon
-     */
-  constructor (callback, appName, appIcon) {
+   * @param {object} options
+   * @param {function?} callback
+   */
+  constructor (options, callback) {
+    if (!callback) {
+      callback = message => {
+        const request = {
+          hostname: options.hostname || "hooks.slack.com",
+          path: options.hookPath,
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        };
+
+        return new Promise((resolve, reject) =>
+          https
+            .request(request)
+            .on("response", response => {
+              let body = "";
+
+              response
+                .on("data", chunk => (body += chunk))
+                .on("end", () => resolve(body));
+            })
+            .on("error", error =>
+              reject(new Error(`Problem: ${error.message}`))
+            )
+            .write(JSON.stringify(message))
+            .end()
+        );
+      };
+    }
+
     this.callback = callback;
-    this.appName = appName;
-    this.appIcon = appIcon || ":stuck_out_tongue_winking_eye:";
+    this.appName = options.appName;
+    this.appIcon = options.appIcon || ":stuck_out_tongue_winking_eye:";
     this.defaultAttachmentColor = "good";
   }
 

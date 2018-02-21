@@ -20,17 +20,18 @@ Assert.isHttpResponse = (val, code, body) => {
 
 describe("Lambda", () => {
   process.env.BOT_CONFIG = JSON.stringify(Faker.botConfig());
+  const noop = () => {};
 
   it("handles invalid http event", () => {
     lambda({}, null, (_, response) => {
       Assert.isHttpResponse(response, 404, 'Page not found');
-    });
+    }, noop);
   });
 
   it("handles silent get request", () => {
     lambda({httpMethod: 'GET'}, null, (_, response) => {
       Assert.isHttpResponse(response, 200, 'OK');
-    });
+    }, noop);
   });
 
   it("handles card moving", () => {
@@ -45,7 +46,8 @@ describe("Lambda", () => {
       null,
       (_, response) => {
         Assert.isHttpResponse(response, 200, ['please review', '#foo']);
-      }
+      },
+      noop
     );
   });
 
@@ -61,7 +63,8 @@ describe("Lambda", () => {
       null,
       (_, response) => {
         Assert.isHttpResponse(response, 200, ['please review', '#foo']);
-      }
+      },
+      noop
     );
   });
 
@@ -77,7 +80,8 @@ describe("Lambda", () => {
       null,
       (_, response) => {
         Assert.isHttpResponse(response, 200, ['please re-review', '#bar']);
-      }
+      },
+      noop
     );
   });
 });

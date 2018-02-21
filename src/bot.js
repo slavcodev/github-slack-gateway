@@ -6,11 +6,11 @@ const Slack = require("./slack");
 class Bot {
   /**
    * @param {object} options
-   * @param {function} callback
-     */
+   * @param {function?} callback
+   */
   constructor (options, callback) {
     this.github = new Github();
-    this.slack = new Slack(callback, options.appName, options.appIcon);
+    this.slack = new Slack(options, callback);
     this.teams = {};
 
     this.addTeams(options.teams)

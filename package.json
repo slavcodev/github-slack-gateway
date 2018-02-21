@@ -36,8 +36,8 @@
   },
   "scripts": {
     "format": "prettier-standard '{src,tests}/**/*.js'",
-    "test": "mocha tests --recursive",
-    "report-coverage": "istanbul cover _mocha $(find ./tests -name \"*.spec.js\")",
+    "test": "istanbul cover _mocha $(find ./tests -name \"*.spec.js\")",
+    "monitor": "mocha tests --recursive --watch",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "start": "node index.js",
     "precommit": "lint-staged"

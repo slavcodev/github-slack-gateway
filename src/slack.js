@@ -23,8 +23,7 @@ class Slack {
   send (message) {
     return new Promise((resolve, reject) => {
       try {
-        this.callback(message);
-        resolve(message);
+        resolve(this.callback(message) || message);
       } catch (e) {
         reject(e);
       }

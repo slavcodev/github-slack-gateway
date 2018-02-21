@@ -5,10 +5,7 @@
 /npm-debug.log
 
 # Github and CI
-/PULL_REQUEST_TEMPLATE.md
-/ISSUE_TEMPLATE.md
-/CONTRIBUTING.md
-/CODE_OF_CONDUCT.md
+/.github
 /.gitattributes
 /.travis.yml
 

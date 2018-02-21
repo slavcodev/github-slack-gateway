@@ -35,7 +35,7 @@ The BSD 2-Clause License. Please see [LICENSE][link-license] for more informatio
 
 [ico-license]: https://img.shields.io/badge/License-BSD%202--Clause-blue.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/slavcodev/github-slack-gateway/master.svg?style=flat-square
-[ico-coveralls]: https://coveralls.io/repos/slavcodev/github-slack-gateway/badge.svg?branch=master&style=flat-square
+[ico-coveralls]: https://img.shields.io/coveralls/github/jekyll/jekyll.svg?style=flat-square
 
 [link-license]: LICENSE
 [link-travis]: https://travis-ci.org/slavcodev/github-slack-gateway

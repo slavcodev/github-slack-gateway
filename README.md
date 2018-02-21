@@ -8,11 +8,11 @@ API Gateway to redirect Github Webhooks to Slack.
 
 ## Install
 
-_TBD_
-
-## TL;DR
-   
-_TBD_
+1. Enable **Slack Incoming webhooks**
+1. Create **AWS Lambda** function and upload the files
+2. Add environment variable `BOT_CONFIG` for the lambda function
+3. Create `Lambda proxy` endpoint on the **AWS API Gateway**
+4. Configure **Github webhook** 
 
 ## Testing
 

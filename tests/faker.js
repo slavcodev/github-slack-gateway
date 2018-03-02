@@ -66,7 +66,7 @@ class Faker {
   }
   static teamReviewCommentCreated() {
     return {
-      headers: { "X-GitHub-Event": "issue_comment" },
+      headers: {"X-GitHub-Event": "issue_comment"},
       payload: {
         action: "created",
         issue: {
@@ -85,7 +85,30 @@ class Faker {
           avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
         }
       }
-    };
+    }
+  }
+  static commentDeleted() {
+    return {
+      headers: {"X-GitHub-Event": "issue_comment"},
+      payload: {
+        action: "deleted",
+        issue: {
+          url: "https://api.github.com/repos/foo/bar/issues/150"
+        },
+        comment: {
+          body: "bar please re-review"
+        },
+        repository: {
+          full_name: "foo/bar"
+        },
+        sender: {
+          login: "slavcodev",
+          url: "https://api.github.com/users/slavcodev",
+          html_url: "https://github.com/slavcodev",
+          avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
+        }
+      }
+    }
   }
 }
 

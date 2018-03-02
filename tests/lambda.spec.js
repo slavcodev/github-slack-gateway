@@ -84,4 +84,21 @@ describe("Lambda", () => {
       noop
     );
   });
+
+  it("handles silent unsupported comment event", () => {
+    const event = Faker.commentDeleted();
+
+    lambda(
+      {
+        httpMethod: 'POST',
+        headers: event.headers,
+        body: JSON.stringify(event.payload)
+      },
+      null,
+      (_, response) => {
+        Assert.isHttpResponse(response, 200, 'OK');
+      },
+      noop
+    );
+  });
 });

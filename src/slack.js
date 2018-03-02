@@ -50,9 +50,9 @@ class Slack {
   send (message) {
     return new Promise((resolve, reject) => {
       try {
-        resolve(this.callback(message) || message);
-      } catch (e) {
-        reject(e);
+        resolve(message ? this.callback(message) || message : message);
+      } catch (error) {
+        reject(error);
       }
     });
   }

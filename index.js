@@ -24,6 +24,9 @@ exports.handler = (event, context, callback, httpClient) => {
     case 'POST':
       bot
         .handle({headers: event.headers, payload: JSON.parse(event.body)})
+        .then(message => {
+          return message || 'OK';
+        })
         .then(message => encode(message))
         .then(message => respond(200, message))
         .catch(error => respond(400, error.message))

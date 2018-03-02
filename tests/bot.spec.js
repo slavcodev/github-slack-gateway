@@ -89,8 +89,9 @@ describe("Bot", () => {
     const bot = new Bot(Faker.botConfig("Badass"), () => {throw new Error("Callback error")});
     bot
       .handle(Faker.projectCardMoved())
-      .catch((e) => {
-        Assert.instanceOf(e, Error);
+      .catch((error) => {
+        Assert.instanceOf(error, Error);
+        Assert.strictEqual("Callback error", error.message);
       });
   });
 });

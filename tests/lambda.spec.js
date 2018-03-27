@@ -85,6 +85,23 @@ describe("Lambda", () => {
     );
   });
 
+  it("handles pull request merge notice", () => {
+    const event = Faker.pullRequestMerged();
+
+    lambda(
+      {
+        httpMethod: 'POST',
+        headers: event.headers,
+        body: JSON.stringify(event.payload)
+      },
+      null,
+      (_, response) => {
+        Assert.isHttpResponse(response, 200, ['merged, going to deploy', '#foo']);
+      },
+      noop
+    );
+  });
+
   it("handles silent unsupported comment event", () => {
     const event = Faker.commentDeleted();
 

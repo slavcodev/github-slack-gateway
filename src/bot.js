@@ -16,6 +16,10 @@ class Bot {
     this.addTeams(options.teams)
       .askReviewOnCardMoved(options.progressColumn, options.reviewColumn)
       .askReviewByComment();
+
+    if (typeof options.deployersTeam !== "undefined") {
+      this.noticePullRequestMerge(options.deployersTeam);
+    }
   }
 
   /**
@@ -85,8 +89,8 @@ class Bot {
   }
 
   /**
-     * @returns {Bot}
-     */
+   * @returns {Bot}
+   */
   askReviewByComment () {
     const teamNames = Object.keys(this.teams);
     const regexp = new RegExp(
@@ -112,6 +116,33 @@ class Bot {
           id: issueId,
           repository: issueRepository,
           link: `https://github.com/${issueRepository}/issues/${issueId}`
+        },
+        teamName
+      );
+    });
+
+    return this;
+  }
+
+  /**
+   * @returns {Bot}
+   */
+  noticePullRequestMerge (teamName) {
+    this.github.onPullRequestMerged(event => {
+      const prRepository = event.payload.repository.full_name;
+      const prId = event.payload.pull_request.number;
+
+      return this.buildMergeNotice(
+        "Just merged, going to deploy",
+        {
+          name: event.payload.sender.login,
+          link: event.payload.sender.html_url,
+          icon: event.payload.sender.avatar_url
+        },
+        {
+          id: prId,
+          repository: prRepository,
+          link: `https://github.com/${prRepository}/issues/${prId}`
         },
         teamName
       );
@@ -153,6 +184,34 @@ class Bot {
                 this.teams[teamName]
               )} ${reviewRequest.toLowerCase()} ${_issue(issue)}`,
               `${_user(author)} asked for review ${_issue(issue)}`
+            )
+        )
+    );
+  }
+
+  /**
+   * @param mergeNotice
+   * @param author
+   * @param pr
+   * @param teamName
+   * @returns {*}
+   */
+  buildMergeNotice (mergeNotice, author, pr, teamName) {
+    return (
+      this.slack
+        .createMessage()
+        // .useDefaultAppName()
+        .setChannel(this.teams[teamName].channel)
+        .addAttachment(
+          this.slack
+            .createAttachment()
+            .setColor("good")
+            .setAuthor(author.name, author.link, author.icon)
+            .setText(
+              `${_team(
+                this.teams[teamName]
+              )} ${mergeNotice.toLowerCase()} ${_issue(pr)}`,
+              `${_user(author)} noticed the merge of the ${_issue(pr)}`
             )
         )
     );

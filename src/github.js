@@ -29,6 +29,8 @@ class GithubEvent {
         return new ProjectCardEvent(id, payload);
       case "issue_comment":
         return new IssueCommentEvent(id, payload);
+      case "pull_request":
+        return new PullRequestEvent(id, payload);
       default:
         throw new Error(`Unsupported event: ${type}`);
     }
@@ -66,26 +68,50 @@ class ProjectCardEvent extends GithubEvent {
  */
 class IssueCommentEvent extends GithubEvent {
   /**
-     * @param id
-     * @param payload
-     */
+   * @param id
+   * @param payload
+   */
   constructor (id, payload) {
     super(id, "issue_comment", payload);
   }
 
   /**
-     * @returns {boolean}
-     */
+   * @returns {boolean}
+   */
   isCreated () {
     return this.payload.action === "created";
   }
 
   /**
-     * @param regexp
-     * @returns {RegExpMatchArray | null}
-     */
+   * @param regexp
+   * @returns {RegExpMatchArray | null}
+   */
   isMatched (regexp) {
     return this.payload.comment.body.match(regexp);
+  }
+}
+
+/**
+ * PullRequestEvent.
+ */
+class PullRequestEvent extends GithubEvent {
+  /**
+   * @param id
+   * @param payload
+   */
+  constructor (id, payload) {
+    super(id, "pull_request", payload);
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  isMergedToMaster () {
+    return (
+      this.payload.action === "closed" &&
+      this.payload.pull_request.merged &&
+      this.payload.pull_request.base.ref === "master"
+    );
   }
 }
 
@@ -117,10 +143,10 @@ class Github {
   }
 
   /**
-     * @param regexp
-     * @param callback
-     * @returns {Github}
-     */
+   * @param regexp
+   * @param callback
+   * @returns {Github}
+   */
   onIssueCommentCreated (regexp, callback) {
     this.handlers.push(event => {
       let matches;
@@ -131,6 +157,20 @@ class Github {
         (matches = event.isMatched(regexp))
       ) {
         return callback(matches, event);
+      }
+    });
+
+    return this;
+  }
+
+  /**
+   * @param callback
+   * @returns {Github}
+   */
+  onPullRequestMerged (callback) {
+    this.handlers.push(event => {
+      if (event instanceof PullRequestEvent && event.isMergedToMaster()) {
+        return callback(event);
       }
     });
 

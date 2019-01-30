@@ -45,7 +45,7 @@ describe("Bot", () => {
     Assert.property(bot.teams, "foo", {teamId: "1", teamName: "foo", channel: "#foo"});
     Assert.property(bot.teams, "bar", {teamId: "2", teamName: "bar", channel: "#bar"});
     Assert.property(bot.teams, "baz", {teamId: "3", teamName: "baz", channel: "#general"});
-    Assert.lengthOf(bot.github.handlers, 3);
+    Assert.lengthOf(bot.github.handlers, 4);
   });
 
   it("handles review request on card moved", () => {

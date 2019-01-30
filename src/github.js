@@ -140,11 +140,13 @@ class Github {
      * @returns {Github}
      */
   onProjectCardMoved (from, to, callback) {
-    this.handlers.push(event => {
-      if (event instanceof ProjectCardEvent && event.isMoved(from, to)) {
-        return callback(event);
-      }
-    });
+    if (callback) {
+      this.handlers.push(event => {
+        if (event instanceof ProjectCardEvent && event.isMoved(from, to)) {
+          return callback(event);
+        }
+      });
+    }
 
     return this;
   }
@@ -155,17 +157,19 @@ class Github {
    * @returns {Github}
    */
   onIssueCommentCreated (regexp, callback) {
-    this.handlers.push(event => {
-      let matches;
+    if (callback) {
+      this.handlers.push(event => {
+        let matches;
 
-      if (
-        event instanceof IssueCommentEvent &&
-        event.isCreated() &&
-        (matches = event.isMatched(regexp))
-      ) {
-        return callback(matches, event);
-      }
-    });
+        if (
+          event instanceof IssueCommentEvent &&
+          event.isCreated() &&
+          (matches = event.isMatched(regexp))
+        ) {
+          return callback(matches, event);
+        }
+      });
+    }
 
     return this;
   }
@@ -175,11 +179,13 @@ class Github {
    * @returns {Github}
    */
   onPullRequestMerged (callback) {
-    this.handlers.push(event => {
-      if (event instanceof PullRequestEvent && event.isMergedToMaster()) {
-        return callback(event);
-      }
-    });
+    if (callback) {
+      this.handlers.push(event => {
+        if (event instanceof PullRequestEvent && event.isMergedToMaster()) {
+          return callback(event);
+        }
+      });
+    }
 
     return this;
   }
@@ -189,11 +195,13 @@ class Github {
    * @returns {Github}
    */
   onReviewRequested (callback) {
-    this.handlers.push(event => {
-      if (event instanceof PullRequestEvent && event.isReviewRequested()) {
-        return callback(event);
-      }
-    });
+    if (callback) {
+      this.handlers.push(event => {
+        if (event instanceof PullRequestEvent && event.isReviewRequested()) {
+          return callback(event);
+        }
+      });
+    }
 
     return this;
   }

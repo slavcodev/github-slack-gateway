@@ -13,12 +13,14 @@ class Bot {
     this.slack = new Slack(options, callback);
     this.teams = {};
 
+    const notifyPullRequestMerge = false;
+
     this.addTeams(options.teams)
       .askReviewOnCardMoved(options.progressColumn, options.reviewColumn)
       .noticeReviewRequested()
       .askReviewByComment();
 
-    if (typeof options.deployersTeam !== "undefined") {
+    if (notifyPullRequestMerge && typeof options.deployersTeam !== "undefined") {
       this.noticePullRequestMerge(options.deployersTeam);
     }
   }
@@ -166,8 +168,15 @@ class Bot {
 
       let teamName = teamNames[0];
 
-      if (requestedTeams[0]) {
-        teamName = requestedTeams[0].name;
+      // Hardcoded slack-github groups map.
+      // TODO: Add to config
+      const teamMaps = {
+        "php": "devs",
+        "frontend": "frontend"
+      };
+
+      if (requestedTeams[0] && teamMaps[requestedTeams[0].name]) {
+        teamName = teamMaps[requestedTeams[0].name];
       } else if (requestedReviewers[0]) {
         teamName = teamNames[0];
       }

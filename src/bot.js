@@ -13,14 +13,12 @@ class Bot {
     this.slack = new Slack(options, callback);
     this.teams = {};
 
-    const notifyPullRequestMerge = false;
-
     this.addTeams(options.teams)
       .askReviewOnCardMoved(options.progressColumn, options.reviewColumn)
       .noticeReviewRequested()
       .askReviewByComment();
 
-    if (notifyPullRequestMerge && typeof options.deployersTeam !== "undefined") {
+    if (typeof options.deployersTeam !== "undefined") {
       this.noticePullRequestMerge(options.deployersTeam);
     }
   }

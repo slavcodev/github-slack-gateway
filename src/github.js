@@ -113,6 +113,13 @@ class PullRequestEvent extends GithubEvent {
       this.payload.pull_request.base.ref === "master"
     );
   }
+
+  /**
+   * @returns {boolean}
+   */
+  isReviewRequested () {
+    return this.payload.action === "review_requested";
+  }
 }
 
 /**
@@ -170,6 +177,20 @@ class Github {
   onPullRequestMerged (callback) {
     this.handlers.push(event => {
       if (event instanceof PullRequestEvent && event.isMergedToMaster()) {
+        return callback(event);
+      }
+    });
+
+    return this;
+  }
+
+  /**
+   * @param callback
+   * @returns {Github}
+   */
+  onReviewRequested (callback) {
+    this.handlers.push(event => {
+      if (event instanceof PullRequestEvent && event.isReviewRequested()) {
         return callback(event);
       }
     });

@@ -57,6 +57,15 @@ describe("Bot", () => {
     ;
   });
 
+  it("handles review request on review requested", () => {
+    bot
+      .handle(Faker.reviewRequested())
+      .then((message) => {
+        Assert.isMessage(message, "foo", "#foo", "please review", "asked for review");
+      })
+    ;
+  });
+
   it("handles review request on comment", () => {
     bot
       .handle(Faker.reviewCommentCreated())

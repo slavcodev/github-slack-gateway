@@ -140,6 +140,39 @@ class Faker {
       }
     }
   }
+  static reviewRequested() {
+    return {
+      headers: {"X-GitHub-Event": "pull_request"},
+      payload: {
+        action: "review_requested",
+        number: 100,
+        pull_request: {
+          url: "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
+          html_url: "https://github.com/baxterthehacker/public-repo/pull/100",
+          number: 100,
+          title: "Update the README with new information",
+          merged_at: null,
+          merged: true,
+          base: {
+            ref: "master"
+          },
+          requested_reviewers: [],
+          requested_teams: [
+            {name: "dev"}
+          ]
+        },
+        repository: {
+          full_name: "foo/bar"
+        },
+        sender: {
+          login: "slavcodev",
+          url: "https://api.github.com/users/slavcodev",
+          html_url: "https://github.com/slavcodev",
+          avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
+        }
+      }
+    }
+  }
 }
 
 module.exports = Faker;

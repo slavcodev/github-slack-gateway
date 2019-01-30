@@ -15,6 +15,7 @@ class Bot {
 
     this.addTeams(options.teams)
       .askReviewOnCardMoved(options.progressColumn, options.reviewColumn)
+      .noticeReviewRequested()
       .askReviewByComment();
 
     if (typeof options.deployersTeam !== "undefined") {
@@ -143,6 +144,45 @@ class Bot {
           id: prId,
           repository: prRepository,
           link: `https://github.com/${prRepository}/issues/${prId}`
+        },
+        teamName
+      );
+    });
+
+    return this;
+  }
+
+  /**
+   * @returns {Bot}
+   */
+  noticeReviewRequested () {
+    const teamNames = Object.keys(this.teams);
+
+    this.github.onReviewRequested(event => {
+      const issueRepository = event.payload.repository.full_name;
+      const prId = event.payload.pull_request.number;
+      const requestedTeams = event.payload.pull_request.requested_teams;
+      const requestedReviewers = event.payload.pull_request.requested_reviewers;
+
+      let teamName = teamNames[0];
+
+      if (requestedTeams[0]) {
+        teamName = requestedTeams[0].name;
+      } else if (requestedReviewers[0]) {
+        teamName = teamNames[0];
+      }
+
+      return this.buildReviewRequest(
+        "Please review",
+        {
+          name: event.payload.sender.login,
+          link: event.payload.sender.html_url,
+          icon: event.payload.sender.avatar_url
+        },
+        {
+          id: prId,
+          repository: issueRepository,
+          link: `https://github.com/${issueRepository}/issues/${prId}`
         },
         teamName
       );

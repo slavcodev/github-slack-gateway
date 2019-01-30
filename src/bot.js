@@ -13,12 +13,20 @@ class Bot {
     this.slack = new Slack(options, callback);
     this.teams = {};
 
-    this.addTeams(options.teams)
-      .askReviewOnCardMoved(options.progressColumn, options.reviewColumn)
+    options.progressColumn = options.progressColumn || false;
+    options.reviewColumn = options.reviewColumn || false;
+    options.deployersTeam = options.deployersTeam || false;
+
+    this
+      .addTeams(options.teams)
       .noticeReviewRequested()
       .askReviewByComment();
 
-    if (typeof options.deployersTeam !== "undefined") {
+    if (options.progressColumn && options.reviewColumn) {
+      this.askReviewOnCardMoved(options.progressColumn, options.reviewColumn);
+    }
+
+    if (options.deployersTeam) {
       this.noticePullRequestMerge(options.deployersTeam);
     }
   }

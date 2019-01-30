@@ -184,7 +184,8 @@ class Bot {
       if (requestedTeams[0] && teamMaps[requestedTeams[0].name]) {
         teamName = teamMaps[requestedTeams[0].name];
       } else if (requestedReviewers[0]) {
-        teamName = teamNames[0];
+        // TODO: Implement review request from user.
+        return;
       }
 
       return this.buildReviewRequest(

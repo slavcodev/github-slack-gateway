@@ -1,7 +1,5 @@
 "use strict";
 
-const Bot = require('./src/bot');
-
 exports.handler = (event, context, callback, httpClient) => {
   const respond = (code, body) => callback(null, {
     statusCode: code,
@@ -14,7 +12,9 @@ exports.handler = (event, context, callback, httpClient) => {
       : JSON.stringify(message);
   };
 
-  const bot = new Bot(JSON.parse(process.env.BOT_CONFIG), httpClient);
+  const Bot = require('./src/bot');
+  const config = @require('./.env.json') || JSON.parse(process.env.BOT_CONFIG);
+  const bot = new Bot(config, httpClient);
 
   switch (event.httpMethod) {
     case 'GET':

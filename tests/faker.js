@@ -158,7 +158,7 @@ class Faker {
           },
           requested_reviewers: [],
           requested_teams: [
-            {name: "dev"}
+            {name: "foo"}
           ]
         },
         repository: {

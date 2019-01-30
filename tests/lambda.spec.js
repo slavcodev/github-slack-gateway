@@ -51,6 +51,23 @@ describe("Lambda", () => {
     );
   });
 
+  it("handles review requesting", () => {
+    const event = Faker.reviewRequested();
+
+    lambda(
+      {
+        httpMethod: 'POST',
+        headers: event.headers,
+        body: JSON.stringify(event.payload)
+      },
+      null,
+      (_, response) => {
+        Assert.isHttpResponse(response, 200, ['please review', '#foo']);
+      },
+      noop
+    );
+  });
+
   it("handles review request comment", () => {
     const event = Faker.reviewCommentCreated();
 

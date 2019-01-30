@@ -1,6 +1,7 @@
 "use strict";
 
 const Bot = require('./src/bot');
+const fs = require('fs');
 
 exports.handler = (event, context, callback, httpClient) => {
   const respond = (code, body) => callback(null, {
@@ -14,7 +15,10 @@ exports.handler = (event, context, callback, httpClient) => {
       : JSON.stringify(message);
   };
 
-  const bot = new Bot(JSON.parse(process.env.BOT_CONFIG), httpClient);
+  const envPath = './.env.json';
+  const envConfig = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf-8') : process.env.BOT_CONFIG;
+
+  const bot = new Bot(JSON.parse(envConfig), httpClient);
 
   switch (event.httpMethod) {
     case 'GET':

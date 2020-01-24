@@ -165,9 +165,9 @@ class Bot {
     this.github.onReviewRequested(event => {
       const issueRepository = event.payload.repository.full_name;
       const prId = event.payload.pull_request.number;
-      const requestedTeam = event.payload.pull_request.requested_team;
+      const requestedTeam = event.payload.requested_team;
 
-      if (!requestedTeam.name) {
+      if (!requestedTeam || !requestedTeam.name) {
         return;
       }
 

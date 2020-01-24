@@ -157,9 +157,9 @@ class Faker {
             ref: "master"
           },
           requested_reviewers: [],
-          requested_teams: [],
-          requested_team: {name: "bar"}
+          requested_teams: []
         },
+        requested_team: {name: "bar"},
         repository: {
           full_name: "foo/bar"
         },
@@ -189,9 +189,9 @@ class Faker {
             ref: "master"
           },
           requested_reviewers: [],
-          requested_teams: [],
-          requested_team: {name: "github-foo"}
+          requested_teams: []
         },
+        requested_team: {name: "github-foo"},
         repository: {
           full_name: "foo/bar"
         },

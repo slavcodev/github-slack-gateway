@@ -17,8 +17,7 @@ class Bot {
     options.reviewColumn = options.reviewColumn || false;
     options.deployersTeam = options.deployersTeam || false;
 
-    this
-      .addTeams(options.teams)
+    this.addTeams(options.teams)
       .noticeReviewRequested()
       .askReviewByComment();
 
@@ -35,14 +34,13 @@ class Bot {
      * @param teamId
      * @param teamName
      * @param channel
+     * @param githubTeamName
      * @returns {Bot}
      */
-  addTeam (teamId, teamName, channel) {
-    this.teams[teamName] = {
-      teamId: teamId,
-      teamName: teamName,
-      channel: channel || "#general"
-    };
+  addTeam (teamId, teamName, channel, githubTeamName) {
+    channel = channel || "#general";
+    githubTeamName = githubTeamName || teamName;
+    this.teams[teamName] = { teamId, teamName, githubTeamName, channel };
 
     return this;
   }
@@ -53,7 +51,7 @@ class Bot {
    */
   addTeams (teams) {
     for (let team of teams) {
-      this.addTeam(team.id, team.name, team.channel);
+      this.addTeam(team.id, team.name, team.channel, team.githubTeamName);
     }
 
     return this;
@@ -164,27 +162,20 @@ class Bot {
    * @returns {Bot}
    */
   noticeReviewRequested () {
-    const teamNames = Object.keys(this.teams);
-
     this.github.onReviewRequested(event => {
       const issueRepository = event.payload.repository.full_name;
       const prId = event.payload.pull_request.number;
-      const requestedTeams = event.payload.pull_request.requested_teams;
-      const requestedReviewers = event.payload.pull_request.requested_reviewers;
+      const requestedTeam = event.payload.requested_team;
 
-      let teamName = teamNames[0];
+      if (!requestedTeam || !requestedTeam.name) {
+        return;
+      }
 
-      // Hardcoded slack-github groups map.
-      // TODO: Add to config
-      const teamMaps = {
-        "php": "devs",
-        "frontend": "frontend"
-      };
+      const team = Object.values(this.teams).find(
+        o => o.githubTeamName === requestedTeam.name
+      );
 
-      if (requestedTeams[0] && teamMaps[requestedTeams[0].name]) {
-        teamName = teamMaps[requestedTeams[0].name];
-      } else if (requestedReviewers[0]) {
-        // TODO: Implement review request from user.
+      if (!team) {
         return;
       }
 
@@ -200,7 +191,7 @@ class Bot {
           repository: issueRepository,
           link: `https://github.com/${issueRepository}/issues/${prId}`
         },
-        teamName
+        team.teamName
       );
     });
 

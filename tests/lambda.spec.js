@@ -62,7 +62,7 @@ describe("Lambda", () => {
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, ['please review', '#foo']);
+        Assert.isHttpResponse(response, 200, ['please review', '#bar']);
       },
       noop
     );

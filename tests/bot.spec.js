@@ -61,6 +61,15 @@ describe("Bot", () => {
     bot
       .handle(Faker.reviewRequested())
       .then((message) => {
+        Assert.isMessage(message, "bar", "#bar", "please review", "asked for review");
+      })
+    ;
+  });
+
+  it("handles review request on review requested with team names mapping", () => {
+    bot
+      .handle(Faker.reviewRequestedFromMappedTeam())
+      .then((message) => {
         Assert.isMessage(message, "foo", "#foo", "please review", "asked for review");
       })
     ;

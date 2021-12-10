@@ -189,7 +189,7 @@ class Bot {
         {
           id: prId,
           repository: issueRepository,
-          link: `https://github.com/${issueRepository}/issues/${prId}`
+          link: `https://github.com/${issueRepository}/pull/${prId}`
         },
         team.teamName
       );

@@ -85,7 +85,7 @@ class Bot {
           {
             id: issueId,
             repository: issueRepository,
-            link: `https://github.com/${issueRepository}/issues/${issueId}`
+            link: `https://github.com/${issueRepository}/pull/${issueId}`
           },
           teamName
         );
@@ -122,7 +122,7 @@ class Bot {
         {
           id: issueId,
           repository: issueRepository,
-          link: `https://github.com/${issueRepository}/issues/${issueId}`
+          link: `https://github.com/${issueRepository}/pull/${issueId}`
         },
         teamName
       );
@@ -149,7 +149,7 @@ class Bot {
         {
           id: prId,
           repository: prRepository,
-          link: `https://github.com/${prRepository}/issues/${prId}`
+          link: `https://github.com/${prRepository}/pull/${prId}`
         },
         teamName
       );

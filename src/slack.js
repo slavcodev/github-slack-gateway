@@ -51,15 +51,15 @@ class Slack {
     return new Promise((resolve, reject) => {
       try {
         resolve(message ? this.callback(message) || message : message);
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(e);
       }
     });
   }
 
   /**
-     * @returns {Message}
-     */
+   * @returns {Message}
+   */
   createMessage () {
     const message = new Message();
 
@@ -71,8 +71,8 @@ class Slack {
   }
 
   /**
-     * @returns {Attachment}
-     */
+   * @returns {Attachment}
+   */
   createAttachment () {
     const attachment = new Attachment();
     attachment.setColor(this.defaultAttachmentColor);
@@ -86,8 +86,8 @@ class Slack {
  */
 class JsonSerializable {
   /**
-     * @returns {string}
-     */
+   * @returns {string}
+   */
   toString () {
     return JSON.stringify(this, null, " ");
   }
@@ -98,9 +98,9 @@ class JsonSerializable {
  */
 class Attachment extends JsonSerializable {
   /**
-     * @param color
-     * @returns {Attachment}
-     */
+   * @param color
+   * @returns {Attachment}
+   */
   setColor (color) {
     this["color"] = color;
 
@@ -108,11 +108,11 @@ class Attachment extends JsonSerializable {
   }
 
   /**
-     * @param name
-     * @param link
-     * @param icon
-     * @returns {Attachment}
-     */
+   * @param name
+   * @param link
+   * @param icon
+   * @returns {Attachment}
+   */
   setAuthor (name, link, icon) {
     this["author_name"] = name;
     this["author_link"] = link;
@@ -122,10 +122,10 @@ class Attachment extends JsonSerializable {
   }
 
   /**
-     * @param text
-     * @param fallback
-     * @returns {Attachment}
-     */
+   * @param text
+   * @param fallback
+   * @returns {Attachment}
+   */
   setText (text, fallback) {
     this["text"] = text;
     this["fallback"] = fallback;
@@ -139,18 +139,18 @@ class Attachment extends JsonSerializable {
  */
 class Message extends JsonSerializable {
   /**
-     * Constructor.
-     */
+   * Constructor.
+   */
   constructor () {
     super();
     this["link_names"] = 1;
   }
 
   /**
-     * @param appName
-     * @param appIcon
-     * @returns {Message}
-     */
+   * @param appName
+   * @param appIcon
+   * @returns {Message}
+   */
   setAppName (appName, appIcon) {
     this["username"] = appName;
     this["icon_emoji"] = appIcon;
@@ -159,9 +159,9 @@ class Message extends JsonSerializable {
   }
 
   /**
-     * @param attachment
-     * @returns {Message}
-     */
+   * @param attachment
+   * @returns {Message}
+   */
   addAttachment (attachment) {
     if (!this["attachments"]) {
       this["attachments"] = [];
@@ -173,9 +173,9 @@ class Message extends JsonSerializable {
   }
 
   /**
-     * @param channel
-     * @returns {Message}
-     */
+   * @param channel
+   * @returns {Message}
+   */
   setChannel (channel) {
     this["channel"] = channel;
 

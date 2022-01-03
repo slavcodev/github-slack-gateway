@@ -31,12 +31,12 @@ class Bot {
   }
 
   /**
-     * @param teamId
-     * @param teamName
-     * @param channel
-     * @param githubTeamName
-     * @returns {Bot}
-     */
+   * @param teamId
+   * @param teamName
+   * @param channel
+   * @param githubTeamName
+   * @returns {Bot}
+   */
   addTeam (teamId, teamName, channel, githubTeamName) {
     channel = channel || "#general";
     githubTeamName = githubTeamName || teamName;
@@ -58,11 +58,11 @@ class Bot {
   }
 
   /**
-     * @param inProgressColumnId
-     * @param inReviewColumnId
-     * @param teamName
-     * @returns {Bot}
-     */
+   * @param inProgressColumnId
+   * @param inReviewColumnId
+   * @param teamName
+   * @returns {Bot}
+   */
   askReviewOnCardMoved (inProgressColumnId, inReviewColumnId, teamName) {
     teamName = teamName || Object.keys(this.teams)[0];
 
@@ -209,12 +209,12 @@ class Bot {
   }
 
   /**
-     * @param reviewRequest
-     * @param author
-     * @param issue
-     * @param teamName
-     * @returns {*}
-     */
+   * @param reviewRequest
+   * @param author
+   * @param issue
+   * @param teamName
+   * @returns {*}
+   */
   buildReviewRequest (reviewRequest, author, issue, teamName) {
     return (
       this.slack

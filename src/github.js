@@ -5,10 +5,10 @@
  */
 class GithubEvent {
   /**
-     * @param id
-     * @param type
-     * @param payload
-     */
+   * @param id
+   * @param type
+   * @param payload
+   */
   constructor (id, type, payload) {
     this.id = id;
     this.type = type;
@@ -16,10 +16,10 @@ class GithubEvent {
   }
 
   /**
-     * @param headers
-     * @param payload
-     * @returns {GithubEvent}
-     */
+   * @param headers
+   * @param payload
+   * @returns {GithubEvent}
+   */
   static create (headers, payload) {
     const id = headers["X-GitHub-Delivery"] || Math.random();
     const type = headers["X-GitHub-Event"];
@@ -42,18 +42,18 @@ class GithubEvent {
  */
 class ProjectCardEvent extends GithubEvent {
   /**
-     * @param id
-     * @param payload
-     */
+   * @param id
+   * @param payload
+   */
   constructor (id, payload) {
     super(id, "project_card", payload);
   }
 
   /**
-     * @param from
-     * @param to
-     * @returns {boolean}
-     */
+   * @param from
+   * @param to
+   * @returns {boolean}
+   */
   isMoved (from, to) {
     return (
       this.payload.action === "moved" &&
@@ -134,11 +134,11 @@ class Github {
   }
 
   /**
-     * @param from
-     * @param to
-     * @param callback
-     * @returns {Github}
-     */
+   * @param from
+   * @param to
+   * @param callback
+   * @returns {Github}
+   */
   onProjectCardMoved (from, to, callback) {
     if (callback) {
       this.handlers.push(event => {
@@ -207,9 +207,9 @@ class Github {
   }
 
   /**
-     * @param headers
-     * @param payload
-     */
+   * @param headers
+   * @param payload
+   */
   handle (headers, payload) {
     const event = GithubEvent.create(headers, payload);
     let message;

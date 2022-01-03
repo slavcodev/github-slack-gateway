@@ -7,9 +7,9 @@ const lambda = require("./../index").handler;
 Assert.isHttpResponse = (val, code, body) => {
   Assert.hasAllKeys(val, ["statusCode", "headers", "body"]);
   Assert.strictEqual(val.statusCode, code);
-  Assert.include(val.headers, {"Content-Type": "application/json"});
+  Assert.include(val.headers, { "Content-Type": "application/json" });
 
-  if (typeof body === 'string') {
+  if (typeof body === "string") {
     body = [body];
   }
 
@@ -23,15 +23,25 @@ describe("Lambda", () => {
   const noop = () => {};
 
   it("handles invalid http event", () => {
-    lambda({}, null, (_, response) => {
-      Assert.isHttpResponse(response, 404, 'Page not found');
-    }, noop);
+    lambda(
+      {},
+      null,
+      (_, response) => {
+        Assert.isHttpResponse(response, 404, "Page not found");
+      },
+      noop
+    );
   });
 
   it("handles silent get request", () => {
-    lambda({httpMethod: 'GET'}, null, (_, response) => {
-      Assert.isHttpResponse(response, 200, 'OK');
-    }, noop);
+    lambda(
+      { httpMethod: "GET" },
+      null,
+      (_, response) => {
+        Assert.isHttpResponse(response, 200, "OK");
+      },
+      noop
+    );
   });
 
   it("handles card moving", () => {
@@ -39,13 +49,13 @@ describe("Lambda", () => {
 
     lambda(
       {
-        httpMethod: 'POST',
+        httpMethod: "POST",
         headers: event.headers,
         body: JSON.stringify(event.payload)
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, ['please review', '#foo']);
+        Assert.isHttpResponse(response, 200, ["please review", "#foo"]);
       },
       noop
     );
@@ -56,13 +66,13 @@ describe("Lambda", () => {
 
     lambda(
       {
-        httpMethod: 'POST',
+        httpMethod: "POST",
         headers: event.headers,
         body: JSON.stringify(event.payload)
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, ['please review', '#bar']);
+        Assert.isHttpResponse(response, 200, ["please review", "#bar"]);
       },
       noop
     );
@@ -73,13 +83,13 @@ describe("Lambda", () => {
 
     lambda(
       {
-        httpMethod: 'POST',
+        httpMethod: "POST",
         headers: event.headers,
         body: JSON.stringify(event.payload)
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, ['please review', '#foo']);
+        Assert.isHttpResponse(response, 200, ["please review", "#foo"]);
       },
       noop
     );
@@ -90,13 +100,13 @@ describe("Lambda", () => {
 
     lambda(
       {
-        httpMethod: 'POST',
+        httpMethod: "POST",
         headers: event.headers,
         body: JSON.stringify(event.payload)
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, ['please re-review', '#bar']);
+        Assert.isHttpResponse(response, 200, ["please re-review", "#bar"]);
       },
       noop
     );
@@ -107,13 +117,16 @@ describe("Lambda", () => {
 
     lambda(
       {
-        httpMethod: 'POST',
+        httpMethod: "POST",
         headers: event.headers,
         body: JSON.stringify(event.payload)
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, ['merged, going to deploy', '#foo']);
+        Assert.isHttpResponse(response, 200, [
+          "merged, going to deploy",
+          "#foo"
+        ]);
       },
       noop
     );
@@ -124,13 +137,13 @@ describe("Lambda", () => {
 
     lambda(
       {
-        httpMethod: 'POST',
+        httpMethod: "POST",
         headers: event.headers,
         body: JSON.stringify(event.payload)
       },
       null,
       (_, response) => {
-        Assert.isHttpResponse(response, 200, 'OK');
+        Assert.isHttpResponse(response, 200, "OK");
       },
       noop
     );

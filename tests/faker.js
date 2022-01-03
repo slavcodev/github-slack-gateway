@@ -1,22 +1,22 @@
 "use strict";
 
 class Faker {
-  static botConfig(appName) {
+  static botConfig (appName) {
     return {
       hookPath: "demo",
       appName: appName,
       appIcon: null,
       teams: [
-        {id: '1', name: 'foo', channel: '#foo', githubTeamName: 'github-foo'},
-        {id: '2', name: 'bar', channel: '#bar'},
-        {id: '3', name: 'baz'},
+        { id: "1", name: "foo", channel: "#foo", githubTeamName: "github-foo" },
+        { id: "2", name: "bar", channel: "#bar" },
+        { id: "3", name: "baz" }
       ],
       deployersTeam: "foo",
       progressColumn: 2038543,
       reviewColumn: 2038567
     };
   }
-  static projectCardMoved() {
+  static projectCardMoved () {
     return {
       headers: { "X-GitHub-Event": "project_card" },
       payload: {
@@ -42,7 +42,7 @@ class Faker {
       }
     };
   }
-  static reviewCommentCreated() {
+  static reviewCommentCreated () {
     return {
       headers: { "X-GitHub-Event": "issue_comment" },
       payload: {
@@ -65,9 +65,9 @@ class Faker {
       }
     };
   }
-  static teamReviewCommentCreated() {
+  static teamReviewCommentCreated () {
     return {
-      headers: {"X-GitHub-Event": "issue_comment"},
+      headers: { "X-GitHub-Event": "issue_comment" },
       payload: {
         action: "created",
         issue: {
@@ -86,11 +86,11 @@ class Faker {
           avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
         }
       }
-    }
+    };
   }
-  static commentDeleted() {
+  static commentDeleted () {
     return {
-      headers: {"X-GitHub-Event": "issue_comment"},
+      headers: { "X-GitHub-Event": "issue_comment" },
       payload: {
         action: "deleted",
         issue: {
@@ -109,16 +109,17 @@ class Faker {
           avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
         }
       }
-    }
+    };
   }
-  static pullRequestMerged() {
+  static pullRequestMerged () {
     return {
-      headers: {"X-GitHub-Event": "pull_request"},
+      headers: { "X-GitHub-Event": "pull_request" },
       payload: {
         action: "closed",
         number: 100,
         pull_request: {
-          url: "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
+          url:
+            "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
           html_url: "https://github.com/baxterthehacker/public-repo/pull/100",
           number: 100,
           title: "Update the README with new information",
@@ -138,16 +139,17 @@ class Faker {
           avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
         }
       }
-    }
+    };
   }
-  static reviewRequested() {
+  static reviewRequested () {
     return {
-      headers: {"X-GitHub-Event": "pull_request"},
+      headers: { "X-GitHub-Event": "pull_request" },
       payload: {
         action: "review_requested",
         number: 100,
         pull_request: {
-          url: "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
+          url:
+            "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
           html_url: "https://github.com/baxterthehacker/public-repo/pull/100",
           number: 100,
           title: "Update the README with new information",
@@ -159,7 +161,7 @@ class Faker {
           requested_reviewers: [],
           requested_teams: []
         },
-        requested_team: {name: "bar"},
+        requested_team: { name: "bar" },
         repository: {
           full_name: "foo/bar"
         },
@@ -170,16 +172,17 @@ class Faker {
           avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
         }
       }
-    }
+    };
   }
-  static reviewRequestedFromMappedTeam() {
+  static reviewRequestedFromMappedTeam () {
     return {
-      headers: {"X-GitHub-Event": "pull_request"},
+      headers: { "X-GitHub-Event": "pull_request" },
       payload: {
         action: "review_requested",
         number: 100,
         pull_request: {
-          url: "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
+          url:
+            "https://api.github.com/repos/baxterthehacker/public-repo/pulls/100",
           html_url: "https://github.com/baxterthehacker/public-repo/pull/100",
           number: 100,
           title: "Update the README with new information",
@@ -191,7 +194,7 @@ class Faker {
           requested_reviewers: [],
           requested_teams: []
         },
-        requested_team: {name: "github-foo"},
+        requested_team: { name: "github-foo" },
         repository: {
           full_name: "foo/bar"
         },
@@ -202,7 +205,7 @@ class Faker {
           avatar_url: "https://avatars1.githubusercontent.com/u/757721?v=4"
         }
       }
-    }
+    };
   }
 }
 

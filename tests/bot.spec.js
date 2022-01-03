@@ -42,65 +42,95 @@ describe("Bot", () => {
     Assert.isObject(bot.slack);
     Assert.isObject(bot.teams);
     Assert.hasAllKeys(bot.teams, ["foo", "bar", "baz"]);
-    Assert.property(bot.teams, "foo", {teamId: "1", teamName: "foo", channel: "#foo"});
-    Assert.property(bot.teams, "bar", {teamId: "2", teamName: "bar", channel: "#bar"});
-    Assert.property(bot.teams, "baz", {teamId: "3", teamName: "baz", channel: "#general"});
+    Assert.property(bot.teams, "foo", {
+      teamId: "1",
+      teamName: "foo",
+      channel: "#foo"
+    });
+    Assert.property(bot.teams, "bar", {
+      teamId: "2",
+      teamName: "bar",
+      channel: "#bar"
+    });
+    Assert.property(bot.teams, "baz", {
+      teamId: "3",
+      teamName: "baz",
+      channel: "#general"
+    });
     Assert.lengthOf(bot.github.handlers, 4);
   });
 
   it("handles review request on card moved", () => {
-    bot
-      .handle(Faker.projectCardMoved())
-      .then((message) => {
-        Assert.isMessage(message, "foo", "#foo", "please review", "asked for review");
-      })
-    ;
+    bot.handle(Faker.projectCardMoved()).then(message => {
+      Assert.isMessage(
+        message,
+        "foo",
+        "#foo",
+        "please review",
+        "asked for review"
+      );
+    });
   });
 
   it("handles review request on review requested", () => {
-    bot
-      .handle(Faker.reviewRequested())
-      .then((message) => {
-        Assert.isMessage(message, "bar", "#bar", "please review", "asked for review");
-      })
-    ;
+    bot.handle(Faker.reviewRequested()).then(message => {
+      Assert.isMessage(
+        message,
+        "bar",
+        "#bar",
+        "please review",
+        "asked for review"
+      );
+    });
   });
 
   it("handles review request on review requested with team names mapping", () => {
-    bot
-      .handle(Faker.reviewRequestedFromMappedTeam())
-      .then((message) => {
-        Assert.isMessage(message, "foo", "#foo", "please review", "asked for review");
-      })
-    ;
+    bot.handle(Faker.reviewRequestedFromMappedTeam()).then(message => {
+      Assert.isMessage(
+        message,
+        "foo",
+        "#foo",
+        "please review",
+        "asked for review"
+      );
+    });
   });
 
   it("handles review request on comment", () => {
-    bot
-      .handle(Faker.reviewCommentCreated())
-      .then((message) => {
-        Assert.isMessage(message, "foo", "#foo", "please review", "asked for review");
-      })
-    ;
+    bot.handle(Faker.reviewCommentCreated()).then(message => {
+      Assert.isMessage(
+        message,
+        "foo",
+        "#foo",
+        "please review",
+        "asked for review"
+      );
+    });
   });
 
   it("handles team re-review request on comment", () => {
-    bot
-      .handle(Faker.teamReviewCommentCreated())
-      .then((message) => {
-        Assert.isMessage(message, "bar", "#bar", "please re-review", "asked for review");
-      })
-    ;
+    bot.handle(Faker.teamReviewCommentCreated()).then(message => {
+      Assert.isMessage(
+        message,
+        "bar",
+        "#bar",
+        "please re-review",
+        "asked for review"
+      );
+    });
   });
 
   it("handles pr merged event", () => {
-    bot
-      .handle(Faker.pullRequestMerged())
-      .then((message) => {
-        //console.log(message);
-        Assert.isMessage(message, "foo", "#foo", "merged, going to deploy", "noticed the merge");
-      })
-    ;
+    bot.handle(Faker.pullRequestMerged()).then(message => {
+      // console.log(message);
+      Assert.isMessage(
+        message,
+        "foo",
+        "#foo",
+        "merged, going to deploy",
+        "noticed the merge"
+      );
+    });
   });
 
   it("fails on handle unknown event", () => {
@@ -114,12 +144,12 @@ describe("Bot", () => {
   });
 
   it("fails on callback errors", () => {
-    const bot = new Bot(Faker.botConfig("Badass"), () => {throw new Error("Callback error")});
-    bot
-      .handle(Faker.projectCardMoved())
-      .catch((error) => {
-        Assert.instanceOf(error, Error);
-        Assert.strictEqual("Callback error", error.message);
-      });
+    const bot = new Bot(Faker.botConfig("Badass"), () => {
+      throw new Error("Callback error");
+    });
+    bot.handle(Faker.projectCardMoved()).catch(error => {
+      Assert.instanceOf(error, Error);
+      Assert.strictEqual("Callback error", error.message);
+    });
   });
 });

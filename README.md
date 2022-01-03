@@ -9,10 +9,38 @@ API Gateway to redirect Github Webhooks to Slack.
 ## Install
 
 1. Enable **Slack Incoming webhooks**
-1. Create **AWS Lambda** function and upload the files
-2. Add environment variable `BOT_CONFIG` for the lambda function
-3. Create `Lambda proxy` endpoint on the **AWS API Gateway**
-4. Configure **Github webhook** 
+2. Create **AWS Lambda** function and upload the files
+3. Add bot config in `.env.json`  or into environment variable `BOT_CONFIG`
+4. Create `Lambda proxy` endpoint on the **AWS API Gateway**
+5. Configure **Github webhook** 
+
+## Config
+
+The config example:
+
+```json
+{
+  "hookPath": "/services/XXXYYYZZZ/ZZZYYYXXX/xyzxyzxyzxyzxyzxyzxyzxyzxyzxyz",
+  "teams": [
+    {
+      "channel": "#channel_hash",
+      "id": "FOOBARBAZ",
+      "name": "team_name_in_slack",
+      "githubTeamName": "team_name_in_github"
+    }
+  ],
+  "progressColumn": 3036545,
+  "reviewColumn": 3038366
+}
+```
+
+- `hookPath`: Slack hook URL path where notification is posted
+- `teams.*.channel`: Slack chanel ID where notification is posted
+- `teams.*.id`: Slack group ID mentioned in notification
+- `teams.*.name`: Slack group name mentioned in notification
+- `teams.*.githubTeamName`: GitHub team name
+- `progressColumn`: GitHub project column ID to monitor when cards moving from column to another
+- `reviewColumn`: GitHub project column ID to monitor when cards moving from column to another
 
 ## Testing
 
